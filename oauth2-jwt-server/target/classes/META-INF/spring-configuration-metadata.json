@@ -1,0 +1,27 @@
+{
+  "groups": [
+    {
+      "name": "owl.seq.snowflake",
+      "type": "com.hawk.oauth.core.snowflake.SnowflakeProp",
+      "sourceType": "com.hawk.oauth.core.snowflake.SnowflakeSeqAutoConfiguration",
+      "sourceMethod": "snowflakeProp()"
+    }
+  ],
+  "properties": [
+    {
+      "name": "owl.seq.snowflake.machine",
+      "type": "java.lang.Integer",
+      "description": "机器标识",
+      "sourceType": "com.hawk.oauth.core.snowflake.SnowflakeProp",
+      "defaultValue": 1
+    },
+    {
+      "name": "owl.seq.snowflake.start-stmp",
+      "type": "java.lang.String",
+      "description": "时间戳相对起始点",
+      "sourceType": "com.hawk.oauth.core.snowflake.SnowflakeProp",
+      "defaultValue": "2018-10-01 00:00:00"
+    }
+  ],
+  "hints": []
+}

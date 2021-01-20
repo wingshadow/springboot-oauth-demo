@@ -1,0 +1,7 @@
+keytool -genkeypair -alias auth-jwt -validity 36500 -keyalg RSA -dname "CN=jwt,OU=jwt,O=jwt,L=zurich,S=zurich, C=CH" -keypass 123456 -keystore auth-jwt.jks -storepass 123456
+
+keytool -export -alias auth-jwt -keystore C:\Users\zhb\auth-jwt.jks -file publickey.cer
+#导出公钥
+keytool -list -rfc --keystore auth-jwt.jks | openssl x509 -inform pem -pubkey -noout
+
+keytool -list -rfc --keystore auth-jwt.jks | openssl x509 -inform pem -pubkey -noout

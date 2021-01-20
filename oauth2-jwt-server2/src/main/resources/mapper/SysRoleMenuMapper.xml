@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hawk.admin.persistence.dao.SysRoleMenuMapper">
+
+    <resultMap id="BaseResultMap" type="com.hawk.admin.persistence.entity.SysRoleMenu">
+        <result column="id" jdbcType="BIGINT" property="id" />
+        <result column="role_id" jdbcType="BIGINT" property="roleId" />
+        <result column="menu_id" jdbcType="BIGINT" property="menuId" />
+        <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" javaType="java.util.Date"/>
+        <result column="last_update_by" jdbcType="VARCHAR" property="lastUpdateBy" />
+        <result column="last_update_time" jdbcType="TIMESTAMP" property="lastUpdateTime" javaType="java.util.Date"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        id,
+        role_id,
+        menu_id,
+        create_by,
+        create_time,
+        last_update_by,
+        last_update_time
+    </sql>
+    
+    <insert id="insert" 
+            parameterType="com.hawk.admin.persistence.entity.SysRoleMenu">
+     INSERT INTO sys_role_menu (
+        id,
+        role_id,
+        menu_id,
+        create_by,
+        create_time,
+        last_update_by,
+        last_update_time
+     ) VALUES (
+        #{id,jdbcType=BIGINT},
+        #{roleId,jdbcType=BIGINT},
+        #{menuId,jdbcType=BIGINT},
+        #{createBy,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP},
+        #{lastUpdateBy,jdbcType=VARCHAR},
+        #{lastUpdateTime,jdbcType=TIMESTAMP}
+     )
+    </insert>
+
+    <insert id="insertBatch" 
+            parameterType="list">
+     INSERT INTO sys_role_menu (
+        id,
+        role_id,
+        menu_id,
+        create_by,
+        create_time,
+        last_update_by,
+        last_update_time
+     ) VALUES
+     <foreach collection="list" item="item" separator=",">
+     (
+        #{item.id,jdbcType=BIGINT},
+        #{item.roleId,jdbcType=BIGINT},
+        #{item.menuId,jdbcType=BIGINT},
+        #{item.createBy,jdbcType=VARCHAR},
+        #{item.createTime,jdbcType=TIMESTAMP},
+        #{item.lastUpdateBy,jdbcType=VARCHAR},
+        #{item.lastUpdateTime,jdbcType=TIMESTAMP}
+     )
+     </foreach>
+    </insert>
+    
+    <insert id="insertSelective" 
+            parameterType="com.hawk.admin.persistence.entity.SysRoleMenu">
+     INSERT INTO sys_role_menu
+     <trim prefix="(" suffix=")" suffixOverrides="," >
+       <if test="id != null">
+           id,
+       </if>
+       <if test="roleId != null">
+           role_id,
+       </if>
+       <if test="menuId != null">
+           menu_id,
+       </if>
+       <if test="createBy != null">
+           create_by,
+       </if>
+       <if test="createTime != null">
+           create_time,
+       </if>
+       <if test="lastUpdateBy != null">
+           last_update_by,
+       </if>
+       <if test="lastUpdateTime != null">
+           last_update_time,
+       </if>
+     </trim>
+     <trim prefix="values (" suffix=")" suffixOverrides="," >
+       <if test="id != null">
+           #{id,jdbcType=BIGINT},
+       </if>
+       <if test="roleId != null">
+           #{roleId,jdbcType=BIGINT},
+       </if>
+       <if test="menuId != null">
+           #{menuId,jdbcType=BIGINT},
+       </if>
+       <if test="createBy != null">
+           #{createBy,jdbcType=VARCHAR},
+       </if>
+       <if test="createTime != null">
+           #{createTime,jdbcType=TIMESTAMP},
+       </if>
+       <if test="lastUpdateBy != null">
+           #{lastUpdateBy,jdbcType=VARCHAR},
+       </if>
+       <if test="lastUpdateTime != null">
+           #{lastUpdateTime,jdbcType=TIMESTAMP},
+       </if>
+     </trim>
+    </insert>
+    
+    <delete id="deleteByPrimaryKey" 
+            parameterType="java.lang.Long">
+     DELETE FROM sys_role_menu WHERE id = #{id,jdbcType=BIGINT}
+    </delete>
+    
+    <delete id="deleteBatchByPrimaryKeys" 
+            parameterType="list">
+     DELETE FROM sys_role_menu 
+      WHERE id IN (
+   <foreach collection="list" item="item" separator=",">
+            #{item,jdbcType=BIGINT}
+   </foreach>
+            )
+    </delete>
+    
+    <update id="updateByPrimaryKeySelective" 
+            parameterType="com.hawk.admin.persistence.entity.SysRoleMenu">
+     UPDATE sys_role_menu 
+       <set>
+        <if test="roleId != null">
+            role_id = #{roleId,jdbcType=BIGINT},
+        </if>
+        <if test="menuId != null">
+            menu_id = #{menuId,jdbcType=BIGINT},
+        </if>
+        <if test="createBy != null">
+            create_by = #{createBy,jdbcType=VARCHAR},
+        </if>
+        <if test="createTime != null">
+            create_time = #{createTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="lastUpdateBy != null">
+            last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+        </if>
+        <if test="lastUpdateTime != null">
+            last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP},
+        </if>
+       </set>
+      WHERE id = #{id,jdbcType=BIGINT}
+    </update>
+    
+    <select id="selectByPrimaryKey" 
+            parameterType="java.lang.Long" 
+            resultMap="BaseResultMap">
+     SELECT <include refid="Base_Column_List" />
+       FROM sys_role_menu
+      WHERE id = #{id,jdbcType=BIGINT}
+    </select>
+    
+    <select id="selectByConditions" 
+            parameterType="com.hawk.admin.persistence.entity.SysRoleMenu"
+            resultMap="BaseResultMap">
+     SELECT <include refid="Base_Column_List" />
+       FROM sys_role_menu
+     <where>
+
+        <if test="id != null">
+                 AND id = #{id,jdbcType=BIGINT}
+        </if>
+
+        <if test="roleId != null">
+                 AND role_id = #{roleId,jdbcType=BIGINT}
+        </if>
+
+        <if test="menuId != null">
+                 AND menu_id = #{menuId,jdbcType=BIGINT}
+        </if>
+
+        <if test="createBy != null and createBy != ''">
+                 AND create_by = #{createBy,jdbcType=VARCHAR}
+        </if>
+
+        <if test="createTime != null">
+                 AND create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+
+        <if test="lastUpdateBy != null and lastUpdateBy != ''">
+                 AND last_update_by = #{lastUpdateBy,jdbcType=VARCHAR}
+        </if>
+
+        <if test="lastUpdateTime != null">
+                 AND last_update_time = #{lastUpdateTime,jdbcType=TIMESTAMP}
+        </if>
+     </where>
+    </select>
+
+    <!--自定义sql-->
+    <delete id="deleteByRoleId"
+            parameterType="java.lang.Long">
+     DELETE FROM sys_role_menu WHERE role_id = #{roleId,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteBatchByRoleIds"
+            parameterType="list">
+        DELETE FROM sys_role_menu
+        WHERE role_id IN (
+        <foreach collection="list" item="item" separator=",">
+            #{item,jdbcType=BIGINT}
+        </foreach>
+        )
+    </delete>
+    
+
+</mapper>
