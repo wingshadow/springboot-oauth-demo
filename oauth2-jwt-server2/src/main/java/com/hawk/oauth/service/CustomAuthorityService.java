@@ -41,6 +41,9 @@ public class CustomAuthorityService {
     @Value("${auth.tokenValiditySeconds}")
     private int tokenValiditySeconds;
 
+    @Value("${auth.refreshValiditySeconds}")
+    private int refreshValiditySeconds;
+
     @Resource
     private TokenGranter tokenGranter;
 
@@ -53,7 +56,7 @@ public class CustomAuthorityService {
     @Resource
     private ClientDetailsService clientDetailsService;
 
-    public AuthorityToken login(String authorization, String username, String password, String grantType) {
+    public String login(String authorization, String username, String password, String grantType) {
         try {
             String[] tokens = CryptUtils.decode(authorization);
             String clientId = tokens[0];
@@ -88,7 +91,9 @@ public class CustomAuthorityService {
 
             // 保存token到redis
             saveToken(authorityToken.getJti(),JSON.toJSONString(authorityToken),tokenValiditySeconds);
-            return authorityToken;
+            saveToken(authorityToken.getJti(),authorityToken.getAccessToken(),tokenValiditySeconds);
+            saveRefreshToken(authorityToken.getJti(),authorityToken.getRefreshToken(),refreshValiditySeconds);
+            return authorityToken.getJti();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -96,7 +101,7 @@ public class CustomAuthorityService {
 
     }
 
-    public AuthorityToken refreshToken(String authorization, String refreshToken) {
+    public String refreshToken(String authorization, String refreshToken) {
         try {
             String[] tokens = CryptUtils.decode(authorization);
             String clientId = tokens[0];
@@ -121,7 +126,9 @@ public class CustomAuthorityService {
             authorityToken.setRefreshToken(token.getRefreshToken().getValue());
             authorityToken.setExpiryTime(token.getExpiresIn());
             authorityToken.setJti((String)token.getAdditionalInformation().get("jti"));
-            return authorityToken;
+            saveToken(authorityToken.getJti(),authorityToken.getAccessToken(),tokenValiditySeconds);
+            saveRefreshToken(authorityToken.getJti(),authorityToken.getRefreshToken(),refreshValiditySeconds);
+            return authorityToken.getJti();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -182,6 +189,13 @@ public class CustomAuthorityService {
     }
 
     private boolean saveToken(String jti, String content, long ttl) {
+        String key = RedisKeys.LOGIN_TOKEN_PREFIX + jti;
+        stringRedisTemplate.boundValueOps(key).set(content, ttl, TimeUnit.SECONDS);
+        Long expire = stringRedisTemplate.getExpire(key, TimeUnit.SECONDS);
+        return expire > 0;
+    }
+
+    private boolean saveRefreshToken(String jti, String content, long ttl) {
         String key = RedisKeys.LOGIN_TOKEN_PREFIX + jti;
         stringRedisTemplate.boundValueOps(key).set(content, ttl, TimeUnit.SECONDS);
         Long expire = stringRedisTemplate.getExpire(key, TimeUnit.SECONDS);

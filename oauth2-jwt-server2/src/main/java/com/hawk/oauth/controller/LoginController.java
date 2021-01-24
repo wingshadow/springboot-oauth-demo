@@ -21,19 +21,19 @@ public class LoginController {
     private CustomAuthorityService customAuthorityService;
 
     @PostMapping(value = "/login")
-    public AuthorityToken login(HttpServletRequest request, String username, String password) {
+    public String login(HttpServletRequest request, String username, String password) {
         String authorization = request.getHeader("Authorization");
         return customAuthorityService.login(authorization, username, password, "password");
     }
 
     @PostMapping(value = "/loginBySmsCode")
-    public AuthorityToken loginBySmsCode(HttpServletRequest request, String mobile, String smsCode) {
+    public String loginBySmsCode(HttpServletRequest request, String mobile, String smsCode) {
         String authorization = request.getHeader("Authorization");
         return customAuthorityService.login(authorization, mobile, smsCode, "mobile");
     }
 
     @PostMapping(value = "/refreshToken")
-    public AuthorityToken login(HttpServletRequest request,String refreshToken) {
+    public String login(HttpServletRequest request,String refreshToken) {
         String authorization = request.getHeader("Authorization");
         return customAuthorityService.refreshToken(authorization, refreshToken);
     }
