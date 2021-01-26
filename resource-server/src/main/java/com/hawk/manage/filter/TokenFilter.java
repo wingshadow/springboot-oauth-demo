@@ -29,6 +29,11 @@ import java.util.Map;
 //@Component
 public class TokenFilter extends GenericFilterBean {
 
+
+    private static final String AUTHORIZATION = "Authorization";
+
+    private static final String BEARER = "bearer";
+
     private StringRedisTemplate stringRedisTemplate;
 
     public TokenFilter(StringRedisTemplate stringRedisTemplate){
@@ -44,8 +49,8 @@ public class TokenFilter extends GenericFilterBean {
         MutableHttpServletRequest mutableRequest = new MutableHttpServletRequest(req);
 
         try {
-            String tokenStr = stringRedisTemplate.opsForValue().get("USER_KEY:" + jti);
-            if (StrUtil.isBlank(tokenStr)) {
+            String token = stringRedisTemplate.opsForValue().get("USER_KEY:" + jti);
+            if (StrUtil.isBlank(token)) {
                 Map<String, Object> error = new HashMap<>();
                 error.put("code", 20002);
                 error.put("msg", "用户未登录");
@@ -53,10 +58,9 @@ public class TokenFilter extends GenericFilterBean {
                 response.getWriter().write(JSON.toJSONString(error));
                 return;
             }
-            AuthorityToken authorityToken = JSON.parseObject(tokenStr, AuthorityToken.class);
 
 
-            mutableRequest.addHeader("Authorization", "bearer " + authorityToken.getAccessToken());
+            mutableRequest.addHeader(AUTHORIZATION,String.format("%s %s",BEARER, token));
             chain.doFilter(mutableRequest, response);
         } catch (Exception e) {
             e.printStackTrace();
